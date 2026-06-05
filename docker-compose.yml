@@ -1,0 +1,53 @@
+version: '3.9'
+
+# 게임 서버
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: server
+    ports:
+      - "9000:9000/udp"
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+    networks:
+      game-network:
+        ipv4_address: 172.20.0.10
+
+# 공격자
+  attacker:
+    build:
+      context: ./attacker
+      dockerfile : Dockerfile
+    container_name: attacker
+    tty: true
+    # command: tail -f /dev/null
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    depends_on:
+      - server
+    networks:
+      game-network:
+        ipv4_address: 172.20.0.30
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: client
+    tty: true
+    networks:
+      game-network:
+        ipv4_address: 172.20.0.20
+    depends_on:
+      - server
+
+networks:
+  game-network:
+    driver: bridge
+    ipam :
+      config:
+        - subnet: 172.20.0.0/24
