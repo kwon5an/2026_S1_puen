@@ -21,10 +21,20 @@ int main() {
         // docker-compose에 지정된 서버 IP와 포트
         udp::endpoint server_ep(boost::asio::ip::make_address("172.20.0.10"), 9000);
 
-        MovePacket pkt{ PacketType::MOVE, 999, 10.0f, 20.0f };
+        MovePacket pkt{ PacketType::MOVE, 1, 0.0f, 20.0f };
         std::cout << "[Client] Sending move packets to server...\n";
-
+        
+        float current_x = 0.0f;
         while (true) {
+            current_x += 1.0f;
+            
+            if (current_x > 100.0f)
+            {
+                current_x = 0.0f;
+            }
+            
+            pkt.x = current_x;
+            pkt.y = 20.0f;
             sock.send_to(boost::asio::buffer(&pkt, sizeof(pkt)), server_ep);
             std::this_thread::sleep_for(std::chrono::milliseconds(16)); // 약 60 FPS
         }

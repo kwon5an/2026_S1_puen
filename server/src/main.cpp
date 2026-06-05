@@ -53,6 +53,10 @@ private:
             socket_.async_send_to(buffer(&pong, 1), remote_ep_,
                 [](boost::system::error_code, std::size_t) {});
         }
+        else
+        {
+            std::cout << "[WARN] Invalid Packet\n";
+        }
     }
 
     void broadcast(const char* data, std::size_t len, uint32_t exclude_id) {
